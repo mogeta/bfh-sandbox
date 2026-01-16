@@ -35,4 +35,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# orval generated
+src/api/generated
+src/api/model
+
+# IDE
 .idea
+.vscode

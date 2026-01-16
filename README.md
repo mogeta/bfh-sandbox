@@ -1,36 +1,178 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Brave Frontier Heroes Dashboard
 
-## Getting Started
+Brave Frontier Heroes の Forge API を利用した Next.js ダッシュボードアプリケーション。
 
-First, run the development server:
+## 機能
+
+- OAuth2認証による安全なログイン
+- ユーザー情報の表示
+- グラスモーフィズムデザイン
+- ヒーローユニットのメタデータ表示
+- バトルリプレイリンク
+- TypeScript + TanStack Query による型安全なAPI連携
+
+## 技術スタック
+
+- **Framework:** Next.js 16 (App Router)
+- **Styling:** Tailwind CSS 4 + shadcn/ui
+- **API Client:** Orval (OpenAPI → TypeScript)
+- **State Management:** TanStack Query
+- **Language:** TypeScript
+
+## セットアップ
+
+### 1. 依存関係のインストール
+
+```bash
+npm install
+```
+
+### 2. 環境変数の設定
+
+`.env.example` を `.env` にコピーして、必要な環境変数を設定してください。
+
+```bash
+cp .env.example .env
+```
+
+`.env` ファイルを編集して、以下の値を設定します：
+
+```env
+CLIENT_ID=your_client_id_here
+CLIENT_SECRET=your_client_secret_here
+NEXT_PUBLIC_BFH_API_BASE_URL=https://api.bravefrontierheroes.com
+NEXT_PUBLIC_BFH_AUTH_URL=https://auth.bravefrontierheroes.com/oauth2/auth
+NEXT_PUBLIC_BFH_TOKEN_URL=https://auth.bravefrontierheroes.com/oauth2/token
+NEXT_PUBLIC_BFH_REDIRECT_URI=http://localhost:3500/auth/callback
+```
+
+### 3. APIクライアントの生成
+
+Swagger定義から TypeScript クライアントコードを生成します。
+
+```bash
+npm run generate:api
+```
+
+### 4. 開発サーバーの起動
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ブラウザで `http://localhost:3500` にアクセスしてください。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## プロジェクト構造
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+bfh-sandbox/
+├── app/
+│   ├── api/
+│   │   ├── auth/
+│   │   │   ├── callback/route.ts  # OAuth2 コールバック
+│   │   │   └── logout/route.ts    # ログアウト
+│   │   └── user/
+│   │       └── me/route.ts        # ユーザー情報取得
+│   ├── dashboard/
+│   │   └── page.tsx               # ダッシュボード画面
+│   ├── login/
+│   │   └── page.tsx               # ログイン画面
+│   ├── layout.tsx                 # ルートレイアウト
+│   ├── page.tsx                   # ホーム（ログインへリダイレクト）
+│   └── globals.css                # グローバルスタイル
+├── src/
+│   ├── api/
+│   │   ├── generated/             # Orval生成コード
+│   │   ├── model/                 # Orval生成モデル
+│   │   └── mutator/
+│   │       └── custom-instance.ts # Axiosカスタムインスタンス
+│   ├── components/
+│   │   ├── ui/                    # shadcn/uiコンポーネント
+│   │   ├── providers/
+│   │   │   └── query-provider.tsx # TanStack Queryプロバイダー
+│   │   ├── unit-card.tsx          # ユニットカードコンポーネント
+│   │   └── battle-replay-link.tsx # バトルリプレイリンク
+│   └── lib/
+│       └── utils.ts               # ユーティリティ関数
+├── orval.config.ts                # Orval設定
+├── components.json                # shadcn/ui設定
+└── tsconfig.json                  # TypeScript設定
+```
 
-## Learn More
+## 主要な機能
 
-To learn more about Next.js, take a look at the following resources:
+### OAuth2認証フロー
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. ユーザーが「ブレヒロでログイン」をクリック
+2. BFH認証ページへリダイレクト
+3. 認証成功後、`/auth/callback` へコールバック
+4. サーバーサイドでトークン交換（CLIENT_SECRETを使用）
+5. アクセストークンをHTTPOnly Cookieに保存
+6. ダッシュボードへリダイレクト
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### APIクライアント
 
-## Deploy on Vercel
+Orvalにより、Swagger定義から自動生成された型安全なAPIクライアントを使用します。
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```typescript
+// 例: ユーザー情報の取得
+import { useGetV1Me } from '@/src/api/generated/user/user';
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+const { data, isLoading, error } = useGetV1Me();
+```
+
+### ユーティリティ関数
+
+```typescript
+// ヒーローメタデータURLの生成
+getHeroMetadataUrl(heroId: string | number): string
+
+// バトルログURLの生成
+getBattleLogUrl(battleId: string | number): string
+
+// バトルリプレイURLの生成
+getBattleReplayUrl(battleId: string | number, lang?: string): string
+```
+
+## コンポーネント
+
+### UnitCard
+
+ヒーローユニットのメタデータを表示するカードコンポーネント。
+
+```tsx
+<UnitCard heroId="200000058" />
+```
+
+### BattleReplayLink
+
+バトルリプレイへのリンクを生成するコンポーネント。
+
+```tsx
+<BattleReplayLink battleId="12345678" lang="ja" />
+```
+
+## デザイン
+
+グラスモーフィズムスタイルを使用した、ゲームの世界観に合うデザインを採用しています。
+
+利用可能なユーティリティクラス：
+- `.glass` - 基本的なガラス効果
+- `.glass-card` - カード用のガラス効果
+- `.glass-hover` - ホバーアニメーション
+
+## スクリプト
+
+- `npm run dev` - 開発サーバーを起動（ポート3500）
+- `npm run build` - プロダクションビルド
+- `npm run start` - プロダクションサーバーを起動
+- `npm run generate:api` - APIクライアントコードを生成
+- `npm run lint` - ESLintでコードをチェック
+
+## 参考リンク
+
+- [Brave Frontier Heroes API](https://api.bravefrontierheroes.com/swagger/doc.json)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [TanStack Query](https://tanstack.com/query)
+- [Orval](https://orval.dev/)
+- [shadcn/ui](https://ui.shadcn.com/)
