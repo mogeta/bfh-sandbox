@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/src/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { LogIn } from 'lucide-react';
 
-export default function LoginPage() {
+function LoginForm() {
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
 
@@ -79,5 +79,26 @@ export default function LoginPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <Card className="w-full max-w-md glass-card border-0">
+          <CardHeader className="space-y-4 text-center">
+            <div className="mx-auto w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+              <LogIn className="w-10 h-10 text-white" />
+            </div>
+            <CardTitle className="text-3xl font-bold text-white">
+              Brave Frontier Heroes
+            </CardTitle>
+          </CardHeader>
+        </Card>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }
