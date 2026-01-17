@@ -7,10 +7,17 @@ import { Button } from '@/src/components/ui/button';
 import { LogOut, User, Wallet, Trophy, Swords } from 'lucide-react';
 
 interface UserData {
-  id: string;
-  username: string;
-  email?: string;
-  [key: string]: any;
+  user: {
+    uid: number;
+    name: string;
+    eth: string;
+    ipfs?: string;
+    country_code?: number;
+    guild_id?: number;
+    land_type?: number;
+    registerd?: number;
+    [key: string]: any;
+  };
 }
 
 export default function DashboardPage() {
@@ -92,7 +99,7 @@ export default function DashboardPage() {
               Brave Frontier Heroes Dashboard
             </h1>
             <p className="text-neutral-300">
-              Welcome back, {userData?.username || 'Player'}!
+              Welcome back, {userData?.user?.name || 'Player'}!
             </p>
           </div>
           <Button
@@ -116,7 +123,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">
-                {userData?.id || 'N/A'}
+                {userData?.user?.uid || 'N/A'}
               </div>
             </CardContent>
           </Card>
@@ -130,7 +137,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">
-                {userData?.username || 'N/A'}
+                {userData?.user?.name || 'N/A'}
               </div>
             </CardContent>
           </Card>
@@ -144,8 +151,8 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">
-                {userData?.wallet_address ?
-                  `${userData.wallet_address.slice(0, 6)}...${userData.wallet_address.slice(-4)}`
+                {userData?.user?.eth ?
+                  `${userData.user.eth.slice(0, 6)}...${userData.user.eth.slice(-4)}`
                   : 'Not Connected'}
               </div>
             </CardContent>
@@ -154,13 +161,13 @@ export default function DashboardPage() {
           <Card className="glass-card glass-hover border-0">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-neutral-300">
-                Rank
+                Guild ID
               </CardTitle>
               <Trophy className="h-4 w-4 text-yellow-400" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">
-                {userData?.rank || 'Unranked'}
+                {userData?.user?.guild_id || 'No Guild'}
               </div>
             </CardContent>
           </Card>
@@ -175,9 +182,57 @@ export default function DashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <pre className="text-sm text-neutral-300 overflow-auto bg-black/20 p-4 rounded-lg">
-              {JSON.stringify(userData, null, 2)}
-            </pre>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <div className="text-sm text-neutral-400">Name</div>
+                  <div className="text-lg font-semibold text-white">
+                    {userData?.user?.name || 'N/A'}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="text-sm text-neutral-400">User ID (UID)</div>
+                  <div className="text-lg font-semibold text-white font-mono">
+                    {userData?.user?.uid || 'N/A'}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="text-sm text-neutral-400">Wallet Address (ETH)</div>
+                  <div className="text-lg font-semibold text-white font-mono break-all">
+                    {userData?.user?.eth || 'Not Connected'}
+                  </div>
+                </div>
+
+                {userData?.user?.ipfs && (
+                  <div className="space-y-2">
+                    <div className="text-sm text-neutral-400">IPFS</div>
+                    <div className="text-lg font-semibold text-white font-mono break-all">
+                      {userData.user.ipfs}
+                    </div>
+                  </div>
+                )}
+
+                {userData?.user?.guild_id && (
+                  <div className="space-y-2">
+                    <div className="text-sm text-neutral-400">Guild ID</div>
+                    <div className="text-lg font-semibold text-white">
+                      {userData.user.guild_id}
+                    </div>
+                  </div>
+                )}
+
+                {userData?.user?.land_type !== undefined && (
+                  <div className="space-y-2">
+                    <div className="text-sm text-neutral-400">Land Type</div>
+                    <div className="text-lg font-semibold text-white">
+                      {userData.user.land_type}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
