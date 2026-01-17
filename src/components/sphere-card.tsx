@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 
-interface HeroMetadata {
+interface SphereMetadata {
   name: string;
   description: string;
   image: string;
@@ -19,21 +19,19 @@ interface HeroMetadata {
     agi: number;
     spr: number;
     def: number;
-    ex_ascension_phase: number;
-    ex_ascension_level: number;
-    brave_burst: string;
-    art_skill: string;
+    ability_name: string;
+    ability_description: string;
   };
 }
 
-interface UnitCardProps {
-  heroId: string | number;
-  initialMetadata?: HeroMetadata;
+interface SphereCardProps {
+  sphereId: string | number;
+  initialMetadata?: SphereMetadata;
   className?: string;
 }
 
-export function UnitCard({ heroId, initialMetadata, className = '' }: UnitCardProps) {
-  const [metadata, setMetadata] = useState<HeroMetadata | null>(initialMetadata || null);
+export function SphereCard({ sphereId, initialMetadata, className = '' }: SphereCardProps) {
+  const [metadata, setMetadata] = useState<SphereMetadata | null>(initialMetadata || null);
   const [loading, setLoading] = useState(!initialMetadata);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,10 +40,10 @@ export function UnitCard({ heroId, initialMetadata, className = '' }: UnitCardPr
 
     const fetchMetadata = async () => {
       try {
-        const response = await fetch(`/api/hero/metadata/${heroId}`);
+        const response = await fetch(`/api/sphere/metadata/${sphereId}`);
 
         if (!response.ok) {
-          throw new Error('Failed to fetch hero metadata');
+          throw new Error('Failed to fetch sphere metadata');
         }
 
         const data = await response.json();
@@ -58,7 +56,7 @@ export function UnitCard({ heroId, initialMetadata, className = '' }: UnitCardPr
     };
 
     fetchMetadata();
-  }, [heroId]);
+  }, [sphereId, initialMetadata]);
 
   if (loading) {
     return (
@@ -78,7 +76,7 @@ export function UnitCard({ heroId, initialMetadata, className = '' }: UnitCardPr
     return (
       <Card className={`glass-card border-0 ${className}`}>
         <CardContent className="p-6 text-center text-red-400">
-          Error loading unit data
+          Error loading sphere data
         </CardContent>
       </Card>
     );
@@ -103,11 +101,11 @@ export function UnitCard({ heroId, initialMetadata, className = '' }: UnitCardPr
 
   return (
     <Card className={`glass-card glass-hover border-0 overflow-hidden ${className}`}>
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative h-48 overflow-hidden bg-black/20">
         <img
           src={metadata.image}
           alt={metadata.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
         />
         <div className="absolute top-2 right-2">
           <span
@@ -176,14 +174,13 @@ export function UnitCard({ heroId, initialMetadata, className = '' }: UnitCardPr
 
         <div className="pt-2 border-t border-neutral-700 space-y-2">
           <div>
-            <p className="text-xs text-neutral-400 mb-1">Brave Burst</p>
-            <p className="text-sm text-purple-300">
-              {metadata.attributes.brave_burst}
+            <p className="text-xs text-neutral-400 mb-1">Ability</p>
+            <p className="text-sm text-cyan-300 font-medium">
+              {metadata.attributes.ability_name}
             </p>
-          </div>
-          <div>
-            <p className="text-xs text-neutral-400 mb-1">Art Skill</p>
-            <p className="text-sm text-pink-300">{metadata.attributes.art_skill}</p>
+            <p className="text-xs text-neutral-300 mt-1 leading-relaxed">
+              {metadata.attributes.ability_description}
+            </p>
           </div>
         </div>
       </CardContent>

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/button';
-import { LogOut, User, Wallet, Trophy, Swords, Grid, ExternalLink } from 'lucide-react';
+import { LogOut, User, Wallet, Trophy, Swords, Grid, Boxes, ExternalLink } from 'lucide-react';
 import { CLIENT_ID, CLIENT_SECRET } from '@/src/config/env';
 import { redirect } from 'next/navigation';
 import { useGetV1Me } from '@/src/api/generated/user/user';
@@ -234,21 +234,40 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Units Section Link */}
-        <Card className="glass-card glass-hover border-0 cursor-pointer" onClick={() => router.push('/units')}>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-white flex items-center">
-                <Grid className="w-6 h-6 mr-2 text-purple-400" />
-                My Units
-              </CardTitle>
-              <CardDescription className="text-neutral-300">
-                View and manage your hero units
-              </CardDescription>
-            </div>
-            <ExternalLink className="w-6 h-6 text-neutral-400" />
-          </CardHeader>
-        </Card>
+        {/* Navigation Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Units Section Link */}
+          <Card className="glass-card glass-hover border-0 cursor-pointer" onClick={() => router.push('/units')}>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-white flex items-center">
+                  <Grid className="w-6 h-6 mr-2 text-purple-400" />
+                  My Units
+                </CardTitle>
+                <CardDescription className="text-neutral-300">
+                  View and manage your hero units
+                </CardDescription>
+              </div>
+              <ExternalLink className="w-6 h-6 text-neutral-400" />
+            </CardHeader>
+          </Card>
+
+          {/* Spheres Section Link */}
+          <Card className="glass-card glass-hover border-0 cursor-pointer" onClick={() => router.push('/spheres')}>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-white flex items-center">
+                  <Boxes className="w-6 h-6 mr-2 text-blue-400" />
+                  My Spheres
+                </CardTitle>
+                <CardDescription className="text-neutral-300">
+                  View and manage your spheres
+                </CardDescription>
+              </div>
+              <ExternalLink className="w-6 h-6 text-neutral-400" />
+            </CardHeader>
+          </Card>
+        </div>
       </div>
     </div>
   );
