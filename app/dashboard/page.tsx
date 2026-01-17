@@ -4,13 +4,10 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/button';
-import { LogOut, User, Wallet, Trophy, Swords, Grid } from 'lucide-react';
+import { LogOut, User, Wallet, Trophy, Swords, Grid, ExternalLink } from 'lucide-react';
 import { CLIENT_ID, CLIENT_SECRET } from '@/src/config/env';
 import { redirect } from 'next/navigation';
-import { UnitCard } from '@/src/components/unit-card';
 import { useGetV1Me } from '@/src/api/generated/user/user';
-import { useGetV1MeUnits } from '@/src/api/generated/assets/assets';
-import { usePostV1Heroes } from '@/src/api/generated/hero/hero';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -24,7 +21,6 @@ export default function DashboardPage() {
 
   // Orval generated React Query hooks
   const { data: userDataRaw, isLoading: isLoadingUser, error: userError } = useGetV1Me();
-  const { data: unitListData, isLoading: isLoadingUnits } = useGetV1MeUnits();
 
   // Type assertion for user data (API returns dynamic object)
   const userData = userDataRaw as {
@@ -41,27 +37,6 @@ export default function DashboardPage() {
     };
   } | undefined;
 
-  // Hero details state and mutation
-  const [heroDetails, setHeroDetails] = useState<{ [key: string]: any }>({});
-  const { mutate: fetchHeroDetails } = usePostV1Heroes({
-    mutation: {
-      onSuccess: (data) => {
-        setHeroDetails(data.heroes || {});
-      },
-    },
-  });
-
-  // Fetch hero details when units are loaded
-  useEffect(() => {
-    if (unitListData?.units && unitListData.units.length > 0) {
-      fetchHeroDetails({
-        data: {
-          hero_ids: unitListData.units.map(Number),
-        },
-      });
-    }
-  }, [unitListData?.units]);
-
   // Handle auth errors
   useEffect(() => {
     if (userError && typeof userError === 'object' && 'status' in userError) {
@@ -72,7 +47,7 @@ export default function DashboardPage() {
     }
   }, [userError, router]);
 
-  const loading = isLoadingUser || isLoadingUnits;
+  const loading = isLoadingUser;
   const error = userError ? (userError instanceof Error ? userError.message : 'Failed to load user data') : null;
 
   const handleLogout = async () => {
@@ -259,28 +234,21 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Units Section */}
-        <div className="space-y-4">
-          <div className="flex items-center space-x-2">
-            <Grid className="h-6 w-6 text-purple-400" />
-            <h2 className="text-2xl font-bold text-white">My Units ({unitListData?.count || 0})</h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {unitListData?.units?.map((unitId) => (
-              <UnitCard
-                key={unitId}
-                heroId={unitId}
-                initialMetadata={heroDetails[unitId]}
-              />
-            ))}
-            {(!unitListData || !unitListData.units || unitListData.units.length === 0) && (
-              <div className="col-span-full py-12 text-center glass-card rounded-xl">
-                <p className="text-neutral-400 italic">No units found in your wallet.</p>
-              </div>
-            )}
-          </div>
-        </div>
+        {/* Units Section Link */}
+        <Card className="glass-card glass-hover border-0 cursor-pointer" onClick={() => router.push('/units')}>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle className="text-white flex items-center">
+                <Grid className="w-6 h-6 mr-2 text-purple-400" />
+                My Units
+              </CardTitle>
+              <CardDescription className="text-neutral-300">
+                View and manage your hero units
+              </CardDescription>
+            </div>
+            <ExternalLink className="w-6 h-6 text-neutral-400" />
+          </CardHeader>
+        </Card>
       </div>
     </div>
   );
