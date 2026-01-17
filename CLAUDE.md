@@ -90,11 +90,28 @@ const response = await fetch('/api/user/me');
 
 **Benefits of using Orval hooks**:
 - Automatic authentication (token injection via custom-instance.ts)
-- Type-safe API calls
+- Type-safe API calls with full TypeScript support
 - Built-in caching, refetching, and error handling via React Query
 - Automatic 401 error handling (redirects to login)
+- React Query DevTools integration for debugging
+- Optimistic updates and background refetching
+- Request deduplication and cancellation
 
-The generated hooks use TanStack Query (React Query) and are automatically typed.
+**Generated hooks follow React Query patterns**:
+```typescript
+// Query hooks (GET requests)
+const { data, isLoading, error, refetch } = useGetV1Me();
+
+// Mutation hooks (POST/PUT/DELETE requests)
+const { mutate, isPending } = usePostV1Heroes({
+  mutation: {
+    onSuccess: (data) => { /* handle success */ },
+    onError: (error) => { /* handle error */ },
+  }
+});
+```
+
+The generated hooks use TanStack Query v5 and are automatically typed with inference.
 
 ## Architecture
 
@@ -131,18 +148,36 @@ All authentication is handled transparently by the custom instance - no manual t
 - **API Routes**: Minimal server-side handlers in `app/api/`
   - `auth/callback/route.ts` - OAuth2 callback handler
   - `auth/logout/route.ts` - Session cleanup
-  - `hero/metadata/[id]/route.ts` - Hero metadata proxy (legacy, consider migrating to Orval)
+  - `auth/refresh/route.ts` - Token refresh endpoint
+  - `auth/token-status/route.ts` - Check token validity
+  - `hero/metadata/[id]/route.ts` - Hero metadata proxy
+  - `sphere/metadata/[id]/route.ts` - Sphere metadata proxy
 - **Pages**:
   - `app/page.tsx` - Root (redirects to login)
-  - `app/login/page.tsx` - Login page
-  - `app/dashboard/page.tsx` - Main dashboard (uses Orval hooks directly)
+  - `app/login/page.tsx` - Login page with OAuth2 flow
+  - `app/dashboard/page.tsx` - Main dashboard (uses Orval hooks)
+  - `app/units/page.tsx` - Units listing page
+  - `app/spheres/page.tsx` - Spheres listing page
+  - `app/auth-debug/page.tsx` - Debug page for auth testing
+  - `app/env-warning/page.tsx` - Warning page for missing env vars
 
 ### Key Components
 
-- **QueryProvider** (`src/components/providers/query-provider.tsx`): TanStack Query setup with client-side rendering
-- **UnitCard** (`src/components/unit-card.tsx`): Displays hero metadata by fetching from `https://core.bravefrontierheroes.com/metadata/units/{heroId}`
+- **QueryProvider** (`src/components/providers/query-provider.tsx`):
+  - TanStack Query client configuration
+  - React Query DevTools integration (dev mode only)
+  - Global query defaults (staleTime, retry, etc.)
+- **UnitCard** (`src/components/unit-card.tsx`): Displays hero metadata
+- **SphereCard** (`src/components/sphere-card.tsx`): Displays sphere metadata
 - **BattleReplayLink** (`src/components/battle-replay-link.tsx`): Generates battle replay URLs
 - **UI Components** (`src/components/ui/`): shadcn/ui components with glassmorphism styling
+
+### Pages
+
+- **Dashboard** (`app/dashboard/page.tsx`): User overview with navigation cards
+- **Units** (`app/units/page.tsx`): Grid view of owned units using `useGetV1MeUnits()`
+- **Spheres** (`app/spheres/page.tsx`): Grid view of owned spheres using `useGetV1MeSpheres()`
+- **Auth Debug** (`app/auth-debug/page.tsx`): Token status and manual refresh for debugging
 
 ### Utility Functions
 
@@ -172,12 +207,64 @@ getHeroMetadataUrl(heroId: number | string): string
 - **Component Library**: shadcn/ui (configured via `components.json`)
 - **Custom Classes**: `.glass`, `.glass-card`, `.glass-hover` for glassmorphism effects
 
+## Best Practices
+
+### Code Quality
+
+1. **Type Safety**
+   - Use Orval-generated types - don't create manual type assertions
+   - Avoid `as any` - use proper type guards or type narrowing
+   - Leverage TypeScript's strict mode
+
+2. **API Calls**
+   - ✅ ALWAYS use Orval-generated React Query hooks
+   - ❌ NEVER create intermediate API routes for BFH API calls
+   - ❌ NEVER use raw `fetch()` or `axios.get()` directly
+   - The custom Axios instance handles auth automatically
+
+3. **Error Handling**
+   - React Query provides built-in error handling
+   - 401 errors automatically redirect to `/login`
+   - Use the `error` property from hooks for user-facing errors
+
+4. **Performance**
+   - React Query caches by default (staleTime: 60s)
+   - Use React Query DevTools to debug cache behavior
+   - Avoid unnecessary re-renders with proper dependencies
+
+5. **Code Generation**
+   - Never edit files in `src/api/generated/` or `src/api/model/`
+   - After OpenAPI spec changes: `npm run generate:api`
+   - Prettier automatically formats generated code
+
+### Development Workflow
+
+1. **Adding New API Endpoints**
+   ```bash
+   # API spec is updated on server
+   npm run generate:api
+   # Import and use the new hooks
+   ```
+
+2. **Debugging API Issues**
+   - Open React Query DevTools (bottom right in dev mode)
+   - Check `/auth-debug` for token status
+   - Inspect Network tab for raw requests
+
+3. **Testing Changes**
+   ```bash
+   npm run build  # Ensures no TypeScript errors
+   npm run dev    # Test in browser with DevTools
+   ```
+
 ## Important Notes
 
 - The app runs on **port 3500** (not the default 3000)
 - All OAuth2 redirect URIs must use `{origin}/api/auth/callback`
 - **ALWAYS use Orval-generated hooks** for BFH API calls - never create custom fetch wrappers or intermediate API routes
 - Access tokens are stored in cookies with `httpOnly: false` to allow client-side access by Orval hooks
+- Refresh tokens remain `httpOnly: true` for security
 - The custom Axios instance (`src/api/mutator/custom-instance.ts`) handles automatic token injection and 401 redirects
 - Generated API code should not be manually edited - regenerate with `npm run generate:api`
 - When adding new API endpoints, regenerate the client and import the new hooks directly
+- React Query DevTools are available in development mode for debugging queries
