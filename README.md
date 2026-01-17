@@ -1,5 +1,7 @@
 # Brave Frontier Heroes Dashboard
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmogeta%2Fbfh-sandbox&env=NEXT_PUBLIC_CLIENT_ID,CLIENT_SECRET)
+
 Brave Frontier Heroes の Forge API を利用した Next.js ダッシュボードアプリケーション。
 
 ## 機能
