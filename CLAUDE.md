@@ -41,20 +41,19 @@ All environment variables are centralized in `src/config/env.ts`. This file prov
 
 ### Environment Variables
 
-Optional environment variables (see `.env.example`):
+Environment variables (see `.env.example`):
 
 ```
-CLIENT_ID=<OAuth2 client ID>
+NEXT_PUBLIC_CLIENT_ID=<OAuth2 client ID - exposed to client>
 CLIENT_SECRET=<OAuth2 client secret - server-side only>
 NEXT_PUBLIC_BFH_API_BASE_URL=https://api.bravefrontierheroes.com (optional, has default)
 NEXT_PUBLIC_BFH_AUTH_URL=https://auth.bravefrontierheroes.com/oauth2/auth (optional, has default)
 NEXT_PUBLIC_BFH_TOKEN_URL=https://auth.bravefrontierheroes.com/oauth2/token (optional, has default)
-SESSION_SECRET=<random string for session encryption>
 ```
 
 **Important**:
-- `CLIENT_ID` and `CLIENT_SECRET` are required for OAuth2 authentication
-- `CLIENT_SECRET` is only used server-side. Never expose it to the client
+- `NEXT_PUBLIC_CLIENT_ID` is required for OAuth2 authentication and is exposed to the client (this is standard for OAuth2 public clients)
+- `CLIENT_SECRET` is required for server-side token exchange and must NEVER be exposed to the client
 - API endpoint URLs have default values and are optional
 - When modifying default values, edit `src/config/env.ts` instead of scattered across files
 

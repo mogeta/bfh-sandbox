@@ -38,12 +38,11 @@ cp .env.example .env
 `.env` ファイルを編集して、以下の値を設定します：
 
 ```env
-CLIENT_ID=your_client_id_here
+NEXT_PUBLIC_CLIENT_ID=your_client_id_here
 CLIENT_SECRET=your_client_secret_here
 NEXT_PUBLIC_BFH_API_BASE_URL=https://api.bravefrontierheroes.com
 NEXT_PUBLIC_BFH_AUTH_URL=https://auth.bravefrontierheroes.com/oauth2/auth
 NEXT_PUBLIC_BFH_TOKEN_URL=https://auth.bravefrontierheroes.com/oauth2/token
-NEXT_PUBLIC_BFH_REDIRECT_URI=http://localhost:3500/auth/callback
 ```
 
 ### 3. APIクライアントの生成

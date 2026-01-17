@@ -22,6 +22,11 @@ function LoginForm() {
     const clientId = CLIENT_ID;
     const redirectUri = `${window.location.origin}/api/auth/callback`;
 
+    if (!clientId) {
+      console.error('CLIENT_ID is not configured. Please set NEXT_PUBLIC_CLIENT_ID in your .env file.');
+      return;
+    }
+
     // CSRF対策用のstateパラメータを生成（最低8文字以上）
     const state = Array.from(crypto.getRandomValues(new Uint8Array(16)))
       .map(b => b.toString(16).padStart(2, '0'))

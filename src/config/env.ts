@@ -9,8 +9,5 @@ export const BFH_AUTH_URL = process.env.NEXT_PUBLIC_BFH_AUTH_URL || 'https://aut
 export const BFH_TOKEN_URL = process.env.NEXT_PUBLIC_BFH_TOKEN_URL || 'https://auth.bravefrontierheroes.com/oauth2/token';
 
 // OAuth2 クライアント設定
-export const CLIENT_ID = process.env.CLIENT_ID || process.env.NEXT_PUBLIC_CLIENT_ID;
+export const CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_ID;
 export const CLIENT_SECRET = process.env.CLIENT_SECRET;
-
-// セッション設定
-export const SESSION_SECRET = process.env.SESSION_SECRET;
