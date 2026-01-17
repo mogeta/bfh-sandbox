@@ -74,8 +74,8 @@ function LoginForm() {
           </div>
 
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-neutral-900 tracking-widest uppercase glitch-text" data-text="Identify">
-              Identify
+            <h1 className="text-3xl font-bold text-neutral-900 tracking-widest uppercase glitch-text" data-text="BFH Sandbox">
+              BFH Sandbox
             </h1>
             <p className="text-neutral-500 font-mono text-xs tracking-wider">
               ACCESS RESTRICTED // AUTH REQUIRED
@@ -98,11 +98,11 @@ function LoginForm() {
               className="w-full h-14 cyber-button text-lg font-bold flex items-center justify-center gap-3"
             >
               <LogIn className="w-5 h-5" />
-              CONNECT TO NEURAL NET
+              CONNECT
             </button>
 
             <p className="text-[10px] text-center text-neutral-500 mt-6 font-mono uppercase">
-              By connecting, you agree to Neural Link Protocols and Data Privacy Standards.
+              ブレヒロにログインします
             </p>
           </div>
         </div>
