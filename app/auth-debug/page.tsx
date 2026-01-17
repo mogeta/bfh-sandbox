@@ -70,21 +70,21 @@ export default function AuthDebugPage() {
     <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
-        <div className="glass-card rounded-xl p-6 flex items-center space-x-4">
+        <div className="cyber-card rounded-xl p-6 flex items-center space-x-4 bg-white">
           <Button
             onClick={() => router.push('/dashboard')}
             variant="outline"
             size="icon"
-            className="glass hover:glass-hover border-neutral-600 text-white"
+            className="cyber-button border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white"
           >
             <ChevronLeft className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-white flex items-center">
-              <ShieldCheck className="w-8 h-8 mr-2 text-green-400" />
+            <h1 className="text-3xl font-bold text-neutral-900 flex items-center uppercase tracking-tight">
+              <ShieldCheck className="w-8 h-8 mr-2 text-green-600" />
               Auth Debug & Refresh
             </h1>
-            <p className="text-neutral-300">
+            <p className="text-neutral-600 font-mono">
               OAuth2 トークンの状態確認とリフレッシュの技術解説
             </p>
           </div>
@@ -92,35 +92,35 @@ export default function AuthDebugPage() {
 
         {/* Token Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="glass-card border-0">
+          <Card className="cyber-card border-2 border-neutral-900 shadow-none">
             <CardHeader>
-              <CardTitle className="text-white flex items-center">
-                <Clock className="w-5 h-5 mr-2 text-blue-400" />
+              <CardTitle className="text-neutral-900 flex items-center font-bold uppercase">
+                <Clock className="w-5 h-5 mr-2 text-blue-600" />
                 現在のトークン状態
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex justify-between items-center p-3 rounded-lg bg-black/20">
-                <span className="text-neutral-400">Access Token</span>
+              <div className="flex justify-between items-center p-3 rounded-lg bg-neutral-100 border border-neutral-200">
+                <span className="text-neutral-500 font-bold text-sm">Access Token</span>
                 {tokenStatus?.hasAccessToken ? (
-                  <span className="text-green-400 font-medium flex items-center">
-                    <ShieldCheck className="w-4 h-4 mr-1" /> 有効
+                  <span className="text-green-700 font-bold flex items-center bg-green-100 px-2 py-1 rounded text-xs uppercase">
+                    <ShieldCheck className="w-3 h-3 mr-1" /> 有効
                   </span>
                 ) : (
-                  <span className="text-red-400 font-medium flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" /> 無し
+                  <span className="text-red-700 font-bold flex items-center bg-red-100 px-2 py-1 rounded text-xs uppercase">
+                    <AlertCircle className="w-3 h-3 mr-1" /> 無し
                   </span>
                 )}
               </div>
-              <div className="flex justify-between items-center p-3 rounded-lg bg-black/20">
-                <span className="text-neutral-400">Refresh Token</span>
+              <div className="flex justify-between items-center p-3 rounded-lg bg-neutral-100 border border-neutral-200">
+                <span className="text-neutral-500 font-bold text-sm">Refresh Token</span>
                 {tokenStatus?.hasRefreshToken ? (
-                  <span className="text-green-400 font-medium flex items-center">
-                    <ShieldCheck className="w-4 h-4 mr-1" /> 有効
+                  <span className="text-green-700 font-bold flex items-center bg-green-100 px-2 py-1 rounded text-xs uppercase">
+                    <ShieldCheck className="w-3 h-3 mr-1" /> 有効
                   </span>
                 ) : (
-                  <span className="text-red-400 font-medium flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" /> 無し
+                  <span className="text-red-700 font-bold flex items-center bg-red-100 px-2 py-1 rounded text-xs uppercase">
+                    <AlertCircle className="w-3 h-3 mr-1" /> 無し
                   </span>
                 )}
               </div>
@@ -129,7 +129,7 @@ export default function AuthDebugPage() {
                 <Button
                   onClick={handleRefresh}
                   disabled={loading || !tokenStatus?.hasRefreshToken}
-                  className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0"
+                  className="w-full cyber-button bg-neutral-900 text-white hover:bg-neutral-800 border-2 border-neutral-900 font-bold uppercase"
                 >
                   <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
                   トークンをリフレッシュする
@@ -137,40 +137,39 @@ export default function AuthDebugPage() {
               </div>
 
               {message && (
-                <div className={`p-4 rounded-lg text-sm border ${
-                  message.type === 'success' 
-                    ? 'bg-green-500/10 border-green-500/20 text-green-300' 
-                    : 'bg-red-500/10 border-red-500/20 text-red-300'
-                }`}>
+                <div className={`p-4 rounded-none border-l-4 font-mono text-xs ${message.type === 'success'
+                    ? 'bg-green-50 border-green-500 text-green-800'
+                    : 'bg-red-50 border-red-500 text-red-800'
+                  }`}>
                   {message.text}
                 </div>
               )}
             </CardContent>
           </Card>
 
-          <Card className="glass-card border-0">
+          <Card className="cyber-card border-2 border-neutral-900 shadow-none">
             <CardHeader>
-              <CardTitle className="text-white flex items-center">
-                <Info className="w-5 h-5 mr-2 text-purple-400" />
+              <CardTitle className="text-neutral-900 flex items-center font-bold uppercase">
+                <Info className="w-5 h-5 mr-2 text-purple-600" />
                 技術解説
               </CardTitle>
             </CardHeader>
-            <CardContent className="text-sm text-neutral-300 space-y-4 leading-relaxed">
+            <CardContent className="text-sm text-neutral-600 space-y-4 leading-relaxed font-mono">
               <p>
                 Brave Frontier Heroes の OAuth2 認証では、アクセストークンの有効期限が切れた際、
-                <code className="text-purple-300 bg-black/30 px-1 rounded">refresh_token</code> 
+                <code className="text-purple-700 bg-purple-100 px-1 rounded font-bold">refresh_token</code>
                 を使用して新しいアクセストークンを取得できます。
               </p>
               <div className="space-y-2">
-                <h4 className="text-white font-semibold">リフレッシュの流れ:</h4>
+                <h4 className="text-neutral-900 font-bold uppercase text-xs">リフレッシュの流れ:</h4>
                 <ol className="list-decimal list-inside space-y-1 ml-2">
-                  <li>ログイン時に <code className="text-pink-300">offline_access</code> スコープを要求</li>
-                  <li>トークン取得時に <code className="text-pink-300">refresh_token</code> が発行される</li>
+                  <li>ログイン時に <code className="text-pink-700 font-bold">offline_access</code> スコープを要求</li>
+                  <li>トークン取得時に <code className="text-pink-700 font-bold">refresh_token</code> が発行される</li>
                   <li>有効期限が切れる前に、このトークンをトークンエンドポイントへ送信</li>
                   <li>新しいアクセストークン（および新しいリフレッシュトークン）を受け取る</li>
                 </ol>
               </div>
-              <p className="text-xs text-neutral-500 italic">
+              <p className="text-xs text-neutral-400 italic mt-4 border-t border-dashed border-neutral-300 pt-2">
                 ※ このデモでは、リフレッシュトークンをサーバーサイドの Secure/HttpOnly Cookie で管理し、
                 ブラウザ側からは直接触れられない安全な構成をとっています。
               </p>
@@ -180,35 +179,35 @@ export default function AuthDebugPage() {
 
         {/* Developer Console Hint */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="glass-card border-0">
+          <Card className="cyber-card border-2 border-neutral-900 shadow-none">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-white text-lg">Developer Tips</CardTitle>
+              <CardTitle className="text-neutral-900 text-lg font-bold uppercase">Developer Tips</CardTitle>
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-neutral-400 hover:text-white h-8 w-8"
+                className="text-neutral-400 hover:text-neutral-900 h-8 w-8 hover:bg-neutral-100"
                 onClick={() => copyToClipboard(`document.cookie.includes('bfh_access_token');`, 'tips')}
               >
                 {copied === 'tips' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
               </Button>
             </CardHeader>
             <CardContent>
-              <div className="bg-black/40 p-4 rounded-lg border border-white/10 font-mono text-xs text-neutral-200">
-                <p className="text-blue-400">// Client-side (Publicly accessible)</p>
-                <p>document.cookie.includes('bfh_access_token'); <span className="text-neutral-500">// true</span></p>
-                <p className="mt-2 text-blue-400">// Server-side (HttpOnly)</p>
+              <div className="bg-neutral-50 p-4 rounded-none border border-neutral-300 font-mono text-xs text-neutral-600">
+                <p className="text-blue-600 font-bold">// Client-side (Publicly accessible)</p>
+                <p>document.cookie.includes('bfh_access_token'); <span className="text-neutral-400">// true</span></p>
+                <p className="mt-2 text-blue-600 font-bold">// Server-side (HttpOnly)</p>
                 <p>const refreshToken = cookies().get('bfh_refresh_token');</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="glass-card border-0">
+          <Card className="cyber-card border-2 border-neutral-900 shadow-none">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-white text-lg">curl Example (Direct)</CardTitle>
+              <CardTitle className="text-neutral-900 text-lg font-bold uppercase">curl Example (Direct)</CardTitle>
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-neutral-400 hover:text-white h-8 w-8"
+                className="text-neutral-400 hover:text-neutral-900 h-8 w-8 hover:bg-neutral-100"
                 onClick={() => copyToClipboard(`curl -X POST https://auth.bravefrontierheroes.com/oauth2/token \\
   -H "Authorization: Basic $(echo -n '${CLIENT_ID || 'YOUR_CLIENT_ID'}:YOUR_CLIENT_SECRET' | base64)" \\
   -H "Content-Type: application/x-www-form-urlencoded" \\
@@ -219,10 +218,10 @@ export default function AuthDebugPage() {
               </Button>
             </CardHeader>
             <CardContent>
-              <div className="bg-black/40 p-4 rounded-lg border border-white/10 font-mono text-xs text-neutral-200 overflow-x-auto">
-                <p className="text-neutral-400"># BFHエンドポイントを直接叩く場合</p>
-                <pre className="mt-2">
-{`curl -X POST https://auth.bravefrontierheroes.com/oauth2/token \\
+              <div className="bg-neutral-50 p-4 rounded-none border border-neutral-300 font-mono text-xs text-neutral-600 overflow-x-auto">
+                <p className="text-neutral-400 italic mb-2"># BFHエンドポイントを直接叩く場合</p>
+                <pre className="whitespace-pre-wrap break-all">
+                  {`curl -X POST https://auth.bravefrontierheroes.com/oauth2/token \\
   -H "Authorization: Basic \$(echo -n '${CLIENT_ID || 'YOUR_CLIENT_ID'}:YOUR_CLIENT_SECRET' | base64)" \\
   -H "Content-Type: application/x-www-form-urlencoded" \\
   -d "grant_type=refresh_token" \\

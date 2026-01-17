@@ -3,8 +3,8 @@
 import { useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/src/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
-import { LogIn } from 'lucide-react';
+// Removed generic Card import to use raw divs with new classes for cleaner control
+import { LogIn, Terminal } from 'lucide-react';
 import { BFH_AUTH_URL, CLIENT_ID, CLIENT_SECRET } from '@/src/config/env';
 import { redirect } from 'next/navigation';
 
@@ -57,43 +57,56 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-md glass-card border-0">
-        <CardHeader className="space-y-4 text-center">
-          <div className="mx-auto w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-            <LogIn className="w-10 h-10 text-white" />
+    <div className="min-h-screen flex items-center justify-center p-4 relative">
+      {/* Background Grid - Light Theme */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-40"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px)',
+          backgroundSize: '40px 40px'
+        }}
+      />
+
+      <div className="w-full max-w-md cyber-card p-8">
+        <div className="space-y-6 text-center">
+          <div className="mx-auto w-20 h-20 flex items-center justify-center border-2 border-neutral-900 bg-white">
+            <Terminal className="w-10 h-10 text-neutral-900" />
           </div>
-          <CardTitle className="text-3xl font-bold text-white">
-            Brave Frontier Heroes
-          </CardTitle>
-          <CardDescription className="text-neutral-300">
-            ブレヒロのアカウントでログインして、ダッシュボードにアクセス
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {error && (
-            <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-300 text-sm">
-              {error === 'token_exchange_failed' && 'トークンの取得に失敗しました'}
-              {error === 'no_code' && '認証コードが見つかりません'}
-              {error === 'unexpected_error' && '予期しないエラーが発生しました'}
-              {!['token_exchange_failed', 'no_code', 'unexpected_error'].includes(error) && error}
-            </div>
-          )}
 
-          <Button
-            onClick={handleLogin}
-            className="w-full h-12 text-lg bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-0"
-            size="lg"
-          >
-            <LogIn className="w-5 h-5 mr-2" />
-            ブレヒロでログイン
-          </Button>
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold text-neutral-900 tracking-widest uppercase glitch-text" data-text="Identify">
+              Identify
+            </h1>
+            <p className="text-neutral-500 font-mono text-xs tracking-wider">
+              ACCESS RESTRICTED // AUTH REQUIRED
+            </p>
+          </div>
 
-          <p className="text-xs text-center text-neutral-400 mt-4">
-            ログインすることで、利用規約とプライバシーポリシーに同意したものとみなされます
-          </p>
-        </CardContent>
-      </Card>
+          <div className="space-y-4 pt-4">
+            {error && (
+              <div className="p-4 bg-red-50 border border-red-500 text-red-600 text-sm font-mono">
+                [ERROR]:
+                {error === 'token_exchange_failed' && 'TOKEN EXCHANGE FAILED'}
+                {error === 'no_code' && 'MISSING AUTH CODE'}
+                {error === 'unexpected_error' && 'SYSTEM ERROR'}
+                {!['token_exchange_failed', 'no_code', 'unexpected_error'].includes(error) && error}
+              </div>
+            )}
+
+            <button
+              onClick={handleLogin}
+              className="w-full h-14 cyber-button text-lg font-bold flex items-center justify-center gap-3"
+            >
+              <LogIn className="w-5 h-5" />
+              CONNECT TO NEURAL NET
+            </button>
+
+            <p className="text-[10px] text-center text-neutral-500 mt-6 font-mono uppercase">
+              By connecting, you agree to Neural Link Protocols and Data Privacy Standards.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -102,16 +115,9 @@ export default function LoginPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="w-full max-w-md glass-card border-0">
-          <CardHeader className="space-y-4 text-center">
-            <div className="mx-auto w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-              <LogIn className="w-10 h-10 text-white" />
-            </div>
-            <CardTitle className="text-3xl font-bold text-white">
-              Brave Frontier Heroes
-            </CardTitle>
-          </CardHeader>
-        </Card>
+        <div className="w-full max-w-md cyber-card p-8 text-center text-neutral-900 font-mono animate-pulse">
+          INITIALIZING...
+        </div>
       </div>
     }>
       <LoginForm />

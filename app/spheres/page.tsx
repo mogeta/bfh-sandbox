@@ -13,7 +13,7 @@ import { usePostV1Spheres } from '@/src/api/generated/sphere/sphere';
 
 export default function SpheresPage() {
   const router = useRouter();
-  
+
   if (!CLIENT_ID || (typeof window === 'undefined' && !CLIENT_SECRET)) {
     if (typeof window !== 'undefined') {
       window.location.href = '/env-warning';
@@ -70,22 +70,22 @@ export default function SpheresPage() {
     <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="glass-card rounded-xl p-6 flex items-center justify-between">
+        <div className="cyber-card rounded-xl p-6 flex items-center justify-between bg-white">
           <div className="flex items-center space-x-4">
             <Button
               onClick={() => router.push('/dashboard')}
               variant="outline"
               size="icon"
-              className="glass hover:glass-hover border-neutral-600 text-white"
+              className="cyber-button border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white"
             >
               <ChevronLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-3xl font-bold text-white flex items-center">
-                <Boxes className="w-8 h-8 mr-2 text-blue-400" />
+              <h1 className="text-3xl font-bold text-neutral-900 flex items-center uppercase tracking-tight">
+                <Boxes className="w-8 h-8 mr-2 text-blue-600" />
                 My Spheres
               </h1>
-              <p className="text-neutral-300">
+              <p className="text-neutral-600 font-mono">
                 Total Spheres: {sphereListData?.count || 0}
               </p>
             </div>
@@ -102,12 +102,12 @@ export default function SpheresPage() {
             />
           ))}
           {(!sphereListData || !sphereListData.spheres || sphereListData.spheres.length === 0) && (
-            <div className="col-span-full py-20 text-center glass-card rounded-xl">
-              <p className="text-neutral-400 italic text-lg">No spheres found in your wallet.</p>
-              <Button 
+            <div className="col-span-full py-20 text-center cyber-card rounded-xl bg-white border-2 border-dashed border-neutral-300">
+              <p className="text-neutral-500 italic text-lg font-mono">No spheres found in your wallet.</p>
+              <Button
                 onClick={() => router.push('/dashboard')}
                 variant="link"
-                className="text-blue-400 mt-4"
+                className="text-blue-600 mt-4 font-bold uppercase"
               >
                 Return to Dashboard
               </Button>

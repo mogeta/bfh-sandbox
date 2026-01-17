@@ -93,19 +93,19 @@ export default function DashboardPage() {
     <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="glass-card rounded-xl p-6 flex items-center justify-between">
+        <div className="cyber-card rounded-xl p-6 flex items-center justify-between bg-white">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="text-3xl font-bold text-neutral-900 mb-2 uppercase tracking-tight">
               Brave Frontier Heroes Dashboard
             </h1>
-            <p className="text-neutral-300">
+            <p className="text-neutral-600 font-mono">
               Welcome back, {userData?.user?.name || 'Player'}!
             </p>
           </div>
           <Button
             onClick={handleLogout}
             variant="outline"
-            className="glass hover:glass-hover border-neutral-600 text-white"
+            className="cyber-button border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white"
           >
             <LogOut className="w-4 h-4 mr-2" />
             Logout
@@ -114,43 +114,43 @@ export default function DashboardPage() {
 
         {/* User Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="glass-card glass-hover border-0">
+          <Card className="cyber-card border-2 border-neutral-900 shadow-none">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-neutral-300">
+              <CardTitle className="text-sm font-bold text-neutral-500 uppercase tracking-wider">
                 User ID
               </CardTitle>
-              <User className="h-4 w-4 text-purple-400" />
+              <User className="h-4 w-4 text-purple-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">
+              <div className="text-2xl font-black text-neutral-900 font-mono">
                 {userData?.user?.uid || 'N/A'}
               </div>
             </CardContent>
           </Card>
 
-          <Card className="glass-card glass-hover border-0">
+          <Card className="cyber-card border-2 border-neutral-900 shadow-none">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-neutral-300">
+              <CardTitle className="text-sm font-bold text-neutral-500 uppercase tracking-wider">
                 Username
               </CardTitle>
-              <Swords className="h-4 w-4 text-pink-400" />
+              <Swords className="h-4 w-4 text-pink-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">
+              <div className="text-2xl font-black text-neutral-900">
                 {userData?.user?.name || 'N/A'}
               </div>
             </CardContent>
           </Card>
 
-          <Card className="glass-card glass-hover border-0">
+          <Card className="cyber-card border-2 border-neutral-900 shadow-none">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-neutral-300">
+              <CardTitle className="text-sm font-bold text-neutral-500 uppercase tracking-wider">
                 Wallet
               </CardTitle>
-              <Wallet className="h-4 w-4 text-blue-400" />
+              <Wallet className="h-4 w-4 text-blue-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">
+              <div className="text-2xl font-black text-neutral-900 font-mono">
                 {userData?.user?.eth ?
                   `${userData.user.eth.slice(0, 6)}...${userData.user.eth.slice(-4)}`
                   : 'Not Connected'}
@@ -158,15 +158,15 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card className="glass-card glass-hover border-0">
+          <Card className="cyber-card border-2 border-neutral-900 shadow-none">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-neutral-300">
+              <CardTitle className="text-sm font-bold text-neutral-500 uppercase tracking-wider">
                 Guild ID
               </CardTitle>
-              <Trophy className="h-4 w-4 text-yellow-400" />
+              <Trophy className="h-4 w-4 text-yellow-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">
+              <div className="text-2xl font-black text-neutral-900 font-mono">
                 {userData?.user?.guild_id || 'No Guild'}
               </div>
             </CardContent>
@@ -174,10 +174,10 @@ export default function DashboardPage() {
         </div>
 
         {/* User Details */}
-        <Card className="glass-card border-0">
+        <Card className="cyber-card border-2 border-neutral-900">
           <CardHeader>
-            <CardTitle className="text-white">Profile Information</CardTitle>
-            <CardDescription className="text-neutral-300">
+            <CardTitle className="text-neutral-900 font-bold uppercase tracking-tight">Profile Information</CardTitle>
+            <CardDescription className="text-neutral-500 font-mono">
               Your account details and statistics
             </CardDescription>
           </CardHeader>
@@ -185,30 +185,30 @@ export default function DashboardPage() {
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <div className="text-sm text-neutral-400">Name</div>
-                  <div className="text-lg font-semibold text-white">
+                  <div className="text-sm text-neutral-500 font-bold uppercase">Name</div>
+                  <div className="text-lg font-bold text-neutral-900">
                     {userData?.user?.name || 'N/A'}
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm text-neutral-400">User ID (UID)</div>
-                  <div className="text-lg font-semibold text-white font-mono">
+                  <div className="text-sm text-neutral-500 font-bold uppercase">User ID (UID)</div>
+                  <div className="text-lg font-bold text-neutral-900 font-mono">
                     {userData?.user?.uid || 'N/A'}
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm text-neutral-400">Wallet Address (ETH)</div>
-                  <div className="text-lg font-semibold text-white font-mono break-all">
+                  <div className="text-sm text-neutral-500 font-bold uppercase">Wallet Address (ETH)</div>
+                  <div className="text-lg font-bold text-neutral-900 font-mono break-all">
                     {userData?.user?.eth || 'Not Connected'}
                   </div>
                 </div>
 
                 {userData?.user?.ipfs && (
                   <div className="space-y-2">
-                    <div className="text-sm text-neutral-400">IPFS</div>
-                    <div className="text-lg font-semibold text-white font-mono break-all">
+                    <div className="text-sm text-neutral-500 font-bold uppercase">IPFS</div>
+                    <div className="text-lg font-bold text-neutral-900 font-mono break-all">
                       {userData.user.ipfs}
                     </div>
                   </div>
@@ -216,8 +216,8 @@ export default function DashboardPage() {
 
                 {userData?.user?.guild_id && (
                   <div className="space-y-2">
-                    <div className="text-sm text-neutral-400">Guild ID</div>
-                    <div className="text-lg font-semibold text-white">
+                    <div className="text-sm text-neutral-500 font-bold uppercase">Guild ID</div>
+                    <div className="text-lg font-bold text-neutral-900 font-mono">
                       {userData.user.guild_id}
                     </div>
                   </div>
@@ -225,8 +225,8 @@ export default function DashboardPage() {
 
                 {userData?.user?.land_type !== undefined && (
                   <div className="space-y-2">
-                    <div className="text-sm text-neutral-400">Land Type</div>
-                    <div className="text-lg font-semibold text-white">
+                    <div className="text-sm text-neutral-500 font-bold uppercase">Land Type</div>
+                    <div className="text-lg font-bold text-neutral-900 font-mono">
                       {userData.user.land_type}
                     </div>
                   </div>
@@ -239,14 +239,14 @@ export default function DashboardPage() {
         {/* Navigation Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Units Section Link */}
-          <Card className="glass-card glass-hover border-0 cursor-pointer" onClick={() => router.push('/units')}>
+          <Card className="cyber-card border-2 border-neutral-900 cursor-pointer hover:bg-neutral-50 transition-colors" onClick={() => router.push('/units')}>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-white flex items-center">
-                  <Grid className="w-6 h-6 mr-2 text-purple-400" />
+                <CardTitle className="text-neutral-900 font-bold flex items-center uppercase">
+                  <Grid className="w-6 h-6 mr-2 text-purple-600" />
                   My Units
                 </CardTitle>
-                <CardDescription className="text-neutral-300">
+                <CardDescription className="text-neutral-500 font-mono mt-1">
                   View and manage your hero units
                 </CardDescription>
               </div>
@@ -255,14 +255,14 @@ export default function DashboardPage() {
           </Card>
 
           {/* Spheres Section Link */}
-          <Card className="glass-card glass-hover border-0 cursor-pointer" onClick={() => router.push('/spheres')}>
+          <Card className="cyber-card border-2 border-neutral-900 cursor-pointer hover:bg-neutral-50 transition-colors" onClick={() => router.push('/spheres')}>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-white flex items-center">
-                  <Boxes className="w-6 h-6 mr-2 text-blue-400" />
+                <CardTitle className="text-neutral-900 font-bold flex items-center uppercase">
+                  <Boxes className="w-6 h-6 mr-2 text-blue-600" />
                   My Spheres
                 </CardTitle>
-                <CardDescription className="text-neutral-300">
+                <CardDescription className="text-neutral-500 font-mono mt-1">
                   View and manage your spheres
                 </CardDescription>
               </div>
@@ -271,14 +271,14 @@ export default function DashboardPage() {
           </Card>
 
           {/* Auth Debug Section Link */}
-          <Card className="glass-card glass-hover border-0 cursor-pointer" onClick={() => router.push('/auth-debug')}>
+          <Card className="cyber-card border-2 border-neutral-900 cursor-pointer hover:bg-neutral-50 transition-colors" onClick={() => router.push('/auth-debug')}>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-white flex items-center">
-                  <ShieldCheck className="w-6 h-6 mr-2 text-green-400" />
+                <CardTitle className="text-neutral-900 font-bold flex items-center uppercase">
+                  <ShieldCheck className="w-6 h-6 mr-2 text-green-600" />
                   Auth Debug
                 </CardTitle>
-                <CardDescription className="text-neutral-300">
+                <CardDescription className="text-neutral-500 font-mono mt-1">
                   Token refresh and developer info
                 </CardDescription>
               </div>
