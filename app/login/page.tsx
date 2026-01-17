@@ -18,7 +18,7 @@ function LoginForm() {
 
   const handleLogin = () => {
     const authUrl = process.env.NEXT_PUBLIC_BFH_AUTH_URL!;
-    const clientId = process.env.NEXT_PUBLIC_CLIENT_ID || 'f60a4027-a138-4387-a059-c3a532870901';
+    const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
     const redirectUri = `${window.location.origin}/api/auth/callback`;
 
     // CSRF対策用のstateパラメータを生成（最低8文字以上）

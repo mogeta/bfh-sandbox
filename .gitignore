@@ -42,3 +42,4 @@ src/api/model
 # IDE
 .idea
 .vscode
+.claude
