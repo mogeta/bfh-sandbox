@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/button';
-import { LogOut, User, Wallet, Trophy, Swords, Grid, Boxes, ExternalLink } from 'lucide-react';
+import { LogOut, User, Wallet, Trophy, Swords, Grid, Boxes, ExternalLink, ShieldCheck } from 'lucide-react';
 import { CLIENT_ID, CLIENT_SECRET } from '@/src/config/env';
 import { redirect } from 'next/navigation';
 import { useGetV1Me } from '@/src/api/generated/user/user';
@@ -262,6 +262,22 @@ export default function DashboardPage() {
                 </CardTitle>
                 <CardDescription className="text-neutral-300">
                   View and manage your spheres
+                </CardDescription>
+              </div>
+              <ExternalLink className="w-6 h-6 text-neutral-400" />
+            </CardHeader>
+          </Card>
+
+          {/* Auth Debug Section Link */}
+          <Card className="glass-card glass-hover border-0 cursor-pointer" onClick={() => router.push('/auth-debug')}>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-white flex items-center">
+                  <ShieldCheck className="w-6 h-6 mr-2 text-green-400" />
+                  Auth Debug
+                </CardTitle>
+                <CardDescription className="text-neutral-300">
+                  Token refresh and developer info
                 </CardDescription>
               </div>
               <ExternalLink className="w-6 h-6 text-neutral-400" />
