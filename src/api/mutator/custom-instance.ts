@@ -1,8 +1,9 @@
 import Axios, { AxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
+import { BFH_API_BASE_URL } from '@/src/config/env';
 
 export const AXIOS_INSTANCE = Axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BFH_API_BASE_URL,
+  baseURL: BFH_API_BASE_URL,
 });
 
 // リクエストインターセプター: アクセストークンを自動で付与

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { BFH_TOKEN_URL, CLIENT_ID, CLIENT_SECRET } from '@/src/config/env';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -21,9 +22,9 @@ export async function GET(request: NextRequest) {
 
   try {
     // トークンエンドポイントへのリクエスト
-    const tokenUrl = process.env.NEXT_PUBLIC_BFH_TOKEN_URL!;
-    const clientId = process.env.CLIENT_ID!;
-    const clientSecret = process.env.CLIENT_SECRET!;
+    const tokenUrl = BFH_TOKEN_URL;
+    const clientId = CLIENT_ID!;
+    const clientSecret = CLIENT_SECRET!;
     const redirectUri = `${request.nextUrl.origin}/api/auth/callback`;
 
     // Basic認証のためのBase64エンコード

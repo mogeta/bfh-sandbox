@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { BFH_API_BASE_URL } from '@/src/config/env';
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest) {
 
     // BFH APIからユーザー情報を取得
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BFH_API_BASE_URL}/v1/me`,
+      `${BFH_API_BASE_URL}/v1/me`,
       {
         headers: {
           Authorization: `Bearer ${accessToken.value}`,

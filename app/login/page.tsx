@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from '@/src/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { LogIn } from 'lucide-react';
+import { BFH_AUTH_URL, CLIENT_ID } from '@/src/config/env';
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -17,8 +18,8 @@ function LoginForm() {
   }, [error]);
 
   const handleLogin = () => {
-    const authUrl = process.env.NEXT_PUBLIC_BFH_AUTH_URL!;
-    const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
+    const authUrl = BFH_AUTH_URL;
+    const clientId = CLIENT_ID;
     const redirectUri = `${window.location.origin}/api/auth/callback`;
 
     // CSRF対策用のstateパラメータを生成（最低8文字以上）
