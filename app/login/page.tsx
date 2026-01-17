@@ -5,9 +5,19 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from '@/src/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { LogIn } from 'lucide-react';
-import { BFH_AUTH_URL, CLIENT_ID } from '@/src/config/env';
+import { BFH_AUTH_URL, CLIENT_ID, CLIENT_SECRET } from '@/src/config/env';
+import { redirect } from 'next/navigation';
 
 function LoginForm() {
+  // サーバーサイドでのチェック（クライアントコンポーネント内でもサーバーで初回レンダリングされる）
+  // ただし CLIENT_SECRET はクライアントサイドでは空になる
+  if (!CLIENT_ID || (typeof window === 'undefined' && !CLIENT_SECRET)) {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/env-warning';
+      return null;
+    }
+    redirect('/env-warning');
+  }
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
 
@@ -39,7 +49,7 @@ function LoginForm() {
       response_type: 'code',
       client_id: clientId,
       redirect_uri: redirectUri,
-      scope: 'openid profile email',
+      scope: 'openid profile email offline_access',
       state: state,
     });
 

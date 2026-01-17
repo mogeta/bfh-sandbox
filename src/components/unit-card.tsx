@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { getHeroMetadataUrl } from '@/src/lib/utils';
 
 interface HeroMetadata {
   name: string;
@@ -29,19 +28,21 @@ interface HeroMetadata {
 
 interface UnitCardProps {
   heroId: string | number;
+  initialMetadata?: HeroMetadata;
   className?: string;
 }
 
-export function UnitCard({ heroId, className = '' }: UnitCardProps) {
-  const [metadata, setMetadata] = useState<HeroMetadata | null>(null);
-  const [loading, setLoading] = useState(true);
+export function UnitCard({ heroId, initialMetadata, className = '' }: UnitCardProps) {
+  const [metadata, setMetadata] = useState<HeroMetadata | null>(initialMetadata || null);
+  const [loading, setLoading] = useState(!initialMetadata);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (initialMetadata) return;
+
     const fetchMetadata = async () => {
       try {
-        const url = getHeroMetadataUrl(heroId);
-        const response = await fetch(url);
+        const response = await fetch(`/api/hero/metadata/${heroId}`);
 
         if (!response.ok) {
           throw new Error('Failed to fetch hero metadata');

@@ -32,6 +32,7 @@ npm install
 ### 2. 環境変数の設定
 
 `.env.example` を `.env` にコピーして、必要な環境変数を設定してください。
+`NEXT_PUBLIC_CLIENT_ID` と `CLIENT_SECRET` は [BFH Developer Portal](https://bfh-developer-portal-front.vercel.app/) で取得できます。
 
 ```bash
 cp .env.example .env

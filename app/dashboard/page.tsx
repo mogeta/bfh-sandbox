@@ -4,53 +4,76 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/button';
-import { LogOut, User, Wallet, Trophy, Swords } from 'lucide-react';
-
-interface UserData {
-  user: {
-    uid: number;
-    name: string;
-    eth: string;
-    ipfs?: string;
-    country_code?: number;
-    guild_id?: number;
-    land_type?: number;
-    registerd?: number;
-    [key: string]: any;
-  };
-}
+import { LogOut, User, Wallet, Trophy, Swords, Grid } from 'lucide-react';
+import { CLIENT_ID, CLIENT_SECRET } from '@/src/config/env';
+import { redirect } from 'next/navigation';
+import { UnitCard } from '@/src/components/unit-card';
+import { useGetV1Me } from '@/src/api/generated/user/user';
+import { useGetV1MeUnits } from '@/src/api/generated/assets/assets';
+import { usePostV1Heroes } from '@/src/api/generated/hero/hero';
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
-
-  const fetchUserData = async () => {
-    try {
-      const response = await fetch('/api/user/me');
-
-      if (response.status === 401) {
-        router.push('/login');
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch user data');
-      }
-
-      const data = await response.json();
-      setUserData(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-    } finally {
-      setLoading(false);
+  if (!CLIENT_ID || (typeof window === 'undefined' && !CLIENT_SECRET)) {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/env-warning';
+      return null;
     }
-  };
+    redirect('/env-warning');
+  }
+
+  // Orval generated React Query hooks
+  const { data: userDataRaw, isLoading: isLoadingUser, error: userError } = useGetV1Me();
+  const { data: unitListData, isLoading: isLoadingUnits } = useGetV1MeUnits();
+
+  // Type assertion for user data (API returns dynamic object)
+  const userData = userDataRaw as {
+    user?: {
+      uid: number;
+      name: string;
+      eth: string;
+      ipfs?: string;
+      country_code?: number;
+      guild_id?: number;
+      land_type?: number;
+      registerd?: number;
+      [key: string]: any;
+    };
+  } | undefined;
+
+  // Hero details state and mutation
+  const [heroDetails, setHeroDetails] = useState<{ [key: string]: any }>({});
+  const { mutate: fetchHeroDetails } = usePostV1Heroes({
+    mutation: {
+      onSuccess: (data) => {
+        setHeroDetails(data.heroes || {});
+      },
+    },
+  });
+
+  // Fetch hero details when units are loaded
+  useEffect(() => {
+    if (unitListData?.units && unitListData.units.length > 0) {
+      fetchHeroDetails({
+        data: {
+          hero_ids: unitListData.units.map(Number),
+        },
+      });
+    }
+  }, [unitListData?.units]);
+
+  // Handle auth errors
+  useEffect(() => {
+    if (userError && typeof userError === 'object' && 'status' in userError) {
+      const error = userError as any;
+      if (error.status === 401) {
+        router.push('/login');
+      }
+    }
+  }, [userError, router]);
+
+  const loading = isLoadingUser || isLoadingUnits;
+  const error = userError ? (userError instanceof Error ? userError.message : 'Failed to load user data') : null;
 
   const handleLogout = async () => {
     try {
@@ -235,6 +258,29 @@ export default function DashboardPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Units Section */}
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <Grid className="h-6 w-6 text-purple-400" />
+            <h2 className="text-2xl font-bold text-white">My Units ({unitListData?.count || 0})</h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {unitListData?.units?.map((unitId) => (
+              <UnitCard
+                key={unitId}
+                heroId={unitId}
+                initialMetadata={heroDetails[unitId]}
+              />
+            ))}
+            {(!unitListData || !unitListData.units || unitListData.units.length === 0) && (
+              <div className="col-span-full py-12 text-center glass-card rounded-xl">
+                <p className="text-neutral-400 italic">No units found in your wallet.</p>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

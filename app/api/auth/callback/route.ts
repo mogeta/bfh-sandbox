@@ -53,10 +53,10 @@ export async function GET(request: NextRequest) {
 
     const tokenData = await tokenResponse.json();
 
-    // アクセストークンをHTTPOnlyクッキーに保存
+    // アクセストークンをクッキーに保存（httpOnly: falseでクライアントサイドからアクセス可能）
     const cookieStore = await cookies();
     cookieStore.set('bfh_access_token', tokenData.access_token, {
-      httpOnly: true,
+      httpOnly: false, // Orval生成のReact Query hooksで使用するためfalse
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: tokenData.expires_in || 3600, // デフォルト1時間
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
     // リフレッシュトークンも保存（存在する場合）
     if (tokenData.refresh_token) {
       cookieStore.set('bfh_refresh_token', tokenData.refresh_token, {
-        httpOnly: true,
+        httpOnly: true, // リフレッシュトークンは安全のためhttpOnly維持
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         maxAge: 30 * 24 * 60 * 60, // 30日
