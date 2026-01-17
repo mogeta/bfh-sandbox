@@ -22,33 +22,35 @@ export default function DashboardPage() {
   // Orval generated React Query hooks
   const { data: userDataRaw, isLoading: isLoadingUser, error: userError } = useGetV1Me();
 
-  // Type assertion for user data (API returns dynamic object)
-  const userData = userDataRaw as {
-    user?: {
-      uid: number;
-      name: string;
-      eth: string;
-      ipfs?: string;
-      country_code?: number;
-      guild_id?: number;
-      land_type?: number;
-      registerd?: number;
-      [key: string]: any;
-    };
-  } | undefined;
+  // Type guard for user data (API returns dynamic object)
+  const userData = userDataRaw?.user ? {
+    user: {
+      uid: userDataRaw.user.uid as number,
+      name: userDataRaw.user.name as string,
+      eth: userDataRaw.user.eth as string,
+      ipfs: userDataRaw.user.ipfs as string | undefined,
+      country_code: userDataRaw.user.country_code as number | undefined,
+      guild_id: userDataRaw.user.guild_id as number | undefined,
+      land_type: userDataRaw.user.land_type as number | undefined,
+      registerd: userDataRaw.user.registerd as number | undefined,
+    }
+  } : undefined;
 
   // Handle auth errors
   useEffect(() => {
-    if (userError && typeof userError === 'object' && 'status' in userError) {
-      const error = userError as any;
-      if (error.status === 401) {
+    if (userError) {
+      // React Query error handling
+      const axiosError = userError as { response?: { status: number } };
+      if (axiosError.response?.status === 401) {
         router.push('/login');
       }
     }
   }, [userError, router]);
 
   const loading = isLoadingUser;
-  const error = userError ? (userError instanceof Error ? userError.message : 'Failed to load user data') : null;
+  const error = userError
+    ? (userError instanceof Error ? userError.message : 'Failed to load user data')
+    : null;
 
   const handleLogout = async () => {
     try {

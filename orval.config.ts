@@ -27,7 +27,7 @@ export default defineConfig({
       },
     },
     hooks: {
-      afterAllFilesWrite: 'prettier --write',
+      afterAllFilesWrite: 'npx prettier --write',
     },
   },
 });
