@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/button';
-import { ChevronLeft, RefreshCw, ShieldCheck, Clock, AlertCircle, Info } from 'lucide-react';
+import { ChevronLeft, RefreshCw, ShieldCheck, Clock, AlertCircle, Info, Copy, Check } from 'lucide-react';
 import { CLIENT_ID } from '@/src/config/env';
 import Cookies from 'js-cookie';
 
@@ -14,6 +14,13 @@ export default function AuthDebugPage() {
   const [tokenStatus, setTokenStatus] = useState<{ hasAccessToken: boolean; hasRefreshToken: boolean } | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [remainingTime, setRemainingTime] = useState<number | null>(null);
+  const [copied, setCopied] = useState<string | null>(null);
+
+  const copyToClipboard = (text: string, id: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(id);
+    setTimeout(() => setCopied(null), 2000);
+  };
 
   const fetchStatus = async () => {
     try {
@@ -172,19 +179,59 @@ export default function AuthDebugPage() {
         </div>
 
         {/* Developer Console Hint */}
-        <Card className="glass-card border-0">
-          <CardHeader>
-            <CardTitle className="text-white text-lg">Developer Tips</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="bg-black/40 p-4 rounded-lg border border-white/10 font-mono text-xs text-neutral-200">
-              <p className="text-blue-400">// Client-side (Publicly accessible)</p>
-              <p>document.cookie.includes('bfh_access_token'); <span className="text-neutral-500">// true</span></p>
-              <p className="mt-2 text-blue-400">// Server-side (HttpOnly)</p>
-              <p>const refreshToken = cookies().get('bfh_refresh_token');</p>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="glass-card border-0">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-white text-lg">Developer Tips</CardTitle>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-neutral-400 hover:text-white h-8 w-8"
+                onClick={() => copyToClipboard(`document.cookie.includes('bfh_access_token');`, 'tips')}
+              >
+                {copied === 'tips' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="bg-black/40 p-4 rounded-lg border border-white/10 font-mono text-xs text-neutral-200">
+                <p className="text-blue-400">// Client-side (Publicly accessible)</p>
+                <p>document.cookie.includes('bfh_access_token'); <span className="text-neutral-500">// true</span></p>
+                <p className="mt-2 text-blue-400">// Server-side (HttpOnly)</p>
+                <p>const refreshToken = cookies().get('bfh_refresh_token');</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="glass-card border-0">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-white text-lg">curl Example (Direct)</CardTitle>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-neutral-400 hover:text-white h-8 w-8"
+                onClick={() => copyToClipboard(`curl -X POST https://auth.bravefrontierheroes.com/oauth2/token \\
+  -H "Authorization: Basic $(echo -n '${CLIENT_ID || 'YOUR_CLIENT_ID'}:YOUR_CLIENT_SECRET' | base64)" \\
+  -H "Content-Type: application/x-www-form-urlencoded" \\
+  -d "grant_type=refresh_token" \\
+  -d "refresh_token=YOUR_REFRESH_TOKEN"`, 'curl')}
+              >
+                {copied === 'curl' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="bg-black/40 p-4 rounded-lg border border-white/10 font-mono text-xs text-neutral-200 overflow-x-auto">
+                <p className="text-neutral-400"># BFHエンドポイントを直接叩く場合</p>
+                <pre className="mt-2">
+{`curl -X POST https://auth.bravefrontierheroes.com/oauth2/token \\
+  -H "Authorization: Basic \$(echo -n '${CLIENT_ID || 'YOUR_CLIENT_ID'}:YOUR_CLIENT_SECRET' | base64)" \\
+  -H "Content-Type: application/x-www-form-urlencoded" \\
+  -d "grant_type=refresh_token" \\
+  -d "refresh_token=YOUR_REFRESH_TOKEN"`}
+                </pre>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

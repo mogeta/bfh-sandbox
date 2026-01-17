@@ -166,9 +166,9 @@ getBattleReplayUrl(battleId: string | number, lang?: string): string
 ## スクリプト
 
 - `npm run dev` - 開発サーバーを起動（ポート3500）
-- `npm run build` - プロダクションビルド
+- `npm run build` - APIクライアントを生成し、プロダクションビルドを実行
 - `npm run start` - プロダクションサーバーを起動
-- `npm run generate:api` - APIクライアントコードを生成
+- `npm run generate:api` - APIクライアントコードを生成（通常は build 時に自動実行されます）
 - `npm run lint` - ESLintでコードをチェック
 
 ## 参考リンク
